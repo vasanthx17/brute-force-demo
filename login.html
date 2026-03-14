@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    {%if waiting and wait_sec>0%}
+    <meta http-equiv="refresh"content="{{ wait_sec }}">
+    {%endif%}
+    <style>
+        body{
+            font-family:Arial;
+            background:#1a1a2e;
+            color:white;
+            text-align:center;
+            padding:50px;
+        }
+        .box{
+            background:#16213e;
+            padding:30px;
+            border-radius:10px;
+            width:350px;
+            margin:auto;
+        }
+        input{
+            width:90%;
+            padding:10px;
+            margin:8px 0;
+            border-radius:5px;
+            border:none;
+            font-size:15px;
+        }
+        button{
+            width:95%;
+            padding:12px;
+            background:#0f3460;
+            color:white;
+            border:none;
+            border-radius:5px;
+            font-size:16px;
+            cursor:pointer;
+            margin-top:10px;
+        }
+        button:hover{background:#e94560;}
+        .log{
+            background:#0f3460;
+            padding:8px 15px;
+            margin:4px;
+            border-radius:5px;
+            font-size:14px;
+            text-align:left;
+        }
+        .card{
+            background:#0f3460;
+            padding:15px;
+            border-radius:8px;
+            margin:8px 0;
+            text-align:left;
+        }
+        .card p{
+            color:#aaa;
+            font-size:13px;
+            margin:5px 0;
+        }
+        .timer{
+            font-size:48px;
+            font-weight:bold;
+            color:orange;
+            margin:10px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="box">
+        <h2>🔐 Login Page</h2>
+
+        {%if message%}
+        <p style="color: {{color}}">{{message}}</p>
+        {%endif%}
+
+        {%if locked%}
+        <div style="background:#e9456022;padding:15px;
+                    border-radius:8px;margin-top:10px;">
+            <h3>🚫 Permanently Locked!</h3>
+            <p style="color:#e94560;">
+                All attempts used!<br>
+                IP address is blocked.
+            </p>
+        </div>
+
+        {%elif waiting%}
+        <div style="background:#ff990022;padding:15px;
+                    border-radius:8px;margin-top:10px;">
+            <h3>⏳ Cooling Down!</h3>
+            <div class="timer" id="timer">{{wait_sec}}</div>
+            <p style="color:orange;">
+                seconds remaining<br>
+                Page auto-refreshes when done!
+            </p>
+        </div>
+
+        {%else%}
+        <form method="POST">
+            <input name="username"
+                   placeholder="Enter Username"><br>
+            <input name="password"
+                   placeholder="Enter Password"
+                   type="password"><br>
+            <button type="submit">Login</button>
+        </form>
+        {%endif%}
+
+    </div>
+
+    {%if waiting%}
+    <script>
+        var sec={{wait_sec}};
+        var t=document.getElementById("timer");
+        var x=setInterval(function() {
+            sec--;
+            if (sec<=0){
+                clearInterval(x);
+                t.innerHTML="0";
+                location.reload();
+            }else{
+                t.innerHTML=sec;
+            }
+        },1000);
+    </script>
+    {%endif%}
+
+    {%if logs%}
+    <div style="margin-top:30px;max-width:450px;
+                margin-left:auto;margin-right:auto;">
+        <h3>📋 Live Attack Logs</h3>
+        {%for log in logs|reverse%}
+        <div class="log">
+            {%if "SUCCESS" in log.result%}
+            ✅ Login Successful
+            {% else %}
+            ❌ Login Failed
+            {%endif%}
+        </div>
+        {%endfor%}
+    </div>
+    {%endif%}
+
+    {%if show_cm%}
+    <div style="margin-top:30px;max-width:450px;
+                margin-left:auto;margin-right:auto;
+                margin-bottom:30px;">
+
+        <h3>🛡️ Countermeasures</h3>
+
+        <div class="card">
+            <b>🔒 Account Lockout</b>
+            <p>Lock account after 5 wrong attempts.
+            This project does this already!</p>
+        </div>
+
+        <div class="card">
+            <b>💪 Strong Passwords</b>
+            <p>Use 12+ characters with numbers
+            and symbols. Weak passwords get
+            cracked in seconds!</p>
+        </div>
+
+        <div class="card">
+            <b>🤖 CAPTCHA</b>
+            <p>Show "I'm not a robot" challenge
+            after 3 failed attempts.
+            Stops automated scripts!</p>
+        </div>
+
+        <div class="card">
+            <b>📱 Two Factor Auth (2FA)</b>
+            <p>Even if password is cracked,
+            attacker needs your phone too.
+            Most secure method!</p>
+        </div>
+
+        <div class="card">
+            <b>🌍 IP Blocking</b>
+            <p>Permanently ban attacker's
+            IP address after lockout.
+            This project does this too!</p>
+        </div>
+
+        <div class="card">
+            <b>📧 Alert System</b>
+            <p>Send email/SMS to admin when
+            attack is detected.
+            React before damage is done!</p>
+        </div>
+
+    </div>
+    {%endif%}
+
+</body>
+</html>
