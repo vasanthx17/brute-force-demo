@@ -99,28 +99,148 @@
         </div>
 
         {% else %}
-                <form method="POST">
-                    <input name="username"
-                           placeholder="Enter Username"><br>
-                    <input name="password"
+                <form method="POST" onsubmit="return validateForm()">
+
+                    <input name="username" id="uname"
+                           placeholder="Enter Username"
+                           onfocus="showRules('u')"
+                           oninput="checkUser()"
+                           onblur="hideRules('u')"><br>
+
+                    <div id="u_rules" style="display:none;
+                         text-align:left; padding:4px 5px;
+                         font-size:13px; margin-bottom:6px;">
+                        <div id="u1" style="color:#aaa;">Between 3 and 20 characters long</div>
+                        <div id="u2" style="color:#aaa;">Contains only letters and numbers</div>
+                    </div>
+
+                    <input name="password" id="pwd"
                            placeholder="Enter Password"
-                           type="password"><br>
+                           type="password"
+                           onfocus="showRules('p')"
+                           oninput="checkPass()"
+                           onblur="hideRules('p')"><br>
+
+                    <div id="p_rules" style="display:none;
+                         text-align:left; padding:4px 5px;
+                         font-size:13px; margin-bottom:6px;">
+                        <div id="p1" style="color:#aaa;">At least 8 characters</div>
+                        <div id="p2" style="color:#aaa;">One uppercase letter (A-Z)</div>
+                        <div id="p3" style="color:#aaa;">One number (0-9)</div>
+                        <div id="p4" style="color:#aaa;">One symbol (!@#$%^&*)</div>
+                    </div>
+
                     <button type="submit">Login</button>
                 </form>
 
-                {% if message and color == "red" %}
-                <div style="background:#0a1628; padding:10px;
-                            border-radius:8px; margin:8px 0;
-                            text-align:left; font-size:13px;">
-                    <p style="color:#aaa; margin:0 0 8px 0;">
-                        🔐 Password must have:
-                    </p>
-                    <div style="color:#aaa;">📏 At least 8 characters</div>
-                    <div style="color:#aaa;">🔠 One uppercase letter (A-Z)</div>
-                    <div style="color:#aaa;">🔢 One number (0-9)</div>
-                    <div style="color:#aaa;">❗ One symbol (!@#$%^&*)</div>
-                </div>
-                {% endif %}
+                <script>
+                function showRules(type) {
+                    if (type == 'u') {
+                        document.getElementById('u_rules').style.display = 'block';
+                        checkUser();
+                    } else {
+                        document.getElementById('p_rules').style.display = 'block';
+                        checkPass();
+                    }
+                }
+
+                function hideRules(type) {
+                    if (type == 'u') {
+                        var u = document.getElementById('uname').value;
+                        var ok = u.length >= 3 && u.length <= 20 && /^[a-zA-Z0-9]+$/.test(u);
+                        if (ok) document.getElementById('u_rules').style.display = 'none';
+                    } else {
+                        var p = document.getElementById('pwd').value;
+                        var ok = p.length >= 8 && /[A-Z]/.test(p) && /[0-9]/.test(p) && /[!@#$%^&*]/.test(p);
+                        if (ok) document.getElementById('p_rules').style.display = 'none';
+                    }
+                }
+
+                function checkUser() {
+                    var u = document.getElementById('uname').value;
+                    if (u.length >= 3 && u.length <= 20) {
+                        document.getElementById('u1').style.display = 'none';
+                    } else {
+                        document.getElementById('u1').style.display = 'block';
+                        document.getElementById('u1').style.color = '#aaa';
+                    }
+                    if (/^[a-zA-Z0-9]+$/.test(u) && u.length > 0) {
+                        document.getElementById('u2').style.display = 'none';
+                    } else {
+                        document.getElementById('u2').style.display = 'block';
+                        document.getElementById('u2').style.color = '#aaa';
+                    }
+                }
+
+                function checkPass() {
+                    var p = document.getElementById('pwd').value;
+                    if (p.length >= 8) {
+                        document.getElementById('p1').style.display = 'none';
+                    } else {
+                        document.getElementById('p1').style.display = 'block';
+                        document.getElementById('p1').style.color = '#aaa';
+                    }
+                    if (/[A-Z]/.test(p)) {
+                        document.getElementById('p2').style.display = 'none';
+                    } else {
+                        document.getElementById('p2').style.display = 'block';
+                        document.getElementById('p2').style.color = '#aaa';
+                    }
+                    if (/[0-9]/.test(p)) {
+                        document.getElementById('p3').style.display = 'none';
+                    } else {
+                        document.getElementById('p3').style.display = 'block';
+                        document.getElementById('p3').style.color = '#aaa';
+                    }
+                    if (/[!@#$%^&*]/.test(p)) {
+                        document.getElementById('p4').style.display = 'none';
+                    } else {
+                        document.getElementById('p4').style.display = 'block';
+                        document.getElementById('p4').style.color = '#aaa';
+                    }
+                }
+
+                function validateForm() {
+                    var u = document.getElementById('uname').value;
+                    var p = document.getElementById('pwd').value;
+                    var valid = true;
+
+                    document.getElementById('u_rules').style.display = 'block';
+                    if (u.length < 3 || u.length > 20) {
+                        document.getElementById('u1').style.display = 'block';
+                        document.getElementById('u1').style.color = 'red';
+                        valid = false;
+                    }
+                    if (!/^[a-zA-Z0-9]+$/.test(u) || u.length == 0) {
+                        document.getElementById('u2').style.display = 'block';
+                        document.getElementById('u2').style.color = 'red';
+                        valid = false;
+                    }
+
+                    document.getElementById('p_rules').style.display = 'block';
+                    if (p.length < 8) {
+                        document.getElementById('p1').style.display = 'block';
+                        document.getElementById('p1').style.color = 'red';
+                        valid = false;
+                    }
+                    if (!/[A-Z]/.test(p)) {
+                        document.getElementById('p2').style.display = 'block';
+                        document.getElementById('p2').style.color = 'red';
+                        valid = false;
+                    }
+                    if (!/[0-9]/.test(p)) {
+                        document.getElementById('p3').style.display = 'block';
+                        document.getElementById('p3').style.color = 'red';
+                        valid = false;
+                    }
+                    if (!/[!@#$%^&*]/.test(p)) {
+                        document.getElementById('p4').style.display = 'block';
+                        document.getElementById('p4').style.color = 'red';
+                        valid = false;
+                    }
+                    return valid;
+                }
+                </script>
 
                 {% endif %}
 
