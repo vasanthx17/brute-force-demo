@@ -98,16 +98,31 @@
             </p>
         </div>
 
-        {%else%}
-        <form method="POST">
-            <input name="username"
-                   placeholder="Enter Username"><br>
-            <input name="password"
-                   placeholder="Enter Password"
-                   type="password"><br>
-            <button type="submit">Login</button>
-        </form>
-        {%endif%}
+        {% else %}
+                <form method="POST">
+                    <input name="username"
+                           placeholder="Enter Username"><br>
+                    <input name="password"
+                           placeholder="Enter Password"
+                           type="password"><br>
+                    <button type="submit">Login</button>
+                </form>
+
+                {% if message and color == "red" %}
+                <div style="background:#0a1628; padding:10px;
+                            border-radius:8px; margin:8px 0;
+                            text-align:left; font-size:13px;">
+                    <p style="color:#aaa; margin:0 0 8px 0;">
+                        🔐 Password must have:
+                    </p>
+                    <div style="color:#aaa;">📏 At least 8 characters</div>
+                    <div style="color:#aaa;">🔠 One uppercase letter (A-Z)</div>
+                    <div style="color:#aaa;">🔢 One number (0-9)</div>
+                    <div style="color:#aaa;">❗ One symbol (!@#$%^&*)</div>
+                </div>
+                {% endif %}
+
+                {% endif %}
 
     </div>
 
