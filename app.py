@@ -5,7 +5,7 @@ app=Flask(__name__)
 app.secret_key="mysecret"
 
 USERNAME="admin"
-PASSWORD="vasanth"
+PASSWORD="sh$Inch2an"
 
 ip_data={}
 
